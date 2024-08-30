@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const NumberOfEvents = () => {
+const NumberOfEvents = ({ setCurrentNOE }) => {
   const [number, setNumber] = useState(32);
   const [newValue, setNewValue] = useState('');
   const [isChanged, setIsChanged] = useState(false);
@@ -13,6 +13,7 @@ const NumberOfEvents = () => {
       setNumber(0)
     } else {
       setNumber(e.target.value)
+      setCurrentNOE(e.target.value)
     }
   };
 

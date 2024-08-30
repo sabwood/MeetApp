@@ -1,11 +1,13 @@
-import { render } from "@testing-library/react";
+import { render, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { getEvents } from "../api";
 import NumberOfEvents from "../components/NumberOfEvents";
+import App from "../App";
 
 describe('<NumberOfEvents /> component', () => {
   let NumberOfEventsComponent;
   beforeEach(() => {
-    NumberOfEventsComponent = render(<NumberOfEvents />);
+    NumberOfEventsComponent = render(<NumberOfEvents setCurrentNOE={() => { }} />);
   });
 
   test('render element with role of textbox', () => {
@@ -21,7 +23,25 @@ describe('<NumberOfEvents /> component', () => {
     const numberOfEvents = NumberOfEventsComponent.getByRole('textbox');
     const user = userEvent.setup();
     await user.type(numberOfEvents, '{backspace}{backspace}10');
-    NumberOfEventsComponent.rerender(<NumberOfEvents />);
+    const allEvents = await getEvents();
+    NumberOfEventsComponent.rerender(<NumberOfEvents setCurrentNOE={allEvents} />);
     expect(numberOfEvents).toHaveValue('10');
   });
-})
+});
+
+describe('<NumberOfEvents /> integration', () => {
+  test('renders a list of events matching the number selected by the user', async () => {
+    const user = userEvent.setup();
+    const AppComponent = render(<App />);
+    const AppDOM = AppComponent.container.firstChild;
+
+    const NumberOfEventsComponent = AppDOM.querySelector('#numberOfEvents');
+    const numberOfEventsInput = within(NumberOfEventsComponent).queryByRole('textbox');
+
+    await user.type(numberOfEventsInput, "{backspace}{backspace}10");
+
+    const EventListDOM = AppDOM.querySelector('#event-list');
+    const allRenderedEventItems = within(EventListDOM).queryAllByRole('listitem');
+    expect(allRenderedEventItems.length).toEqual(10);
+  });
+});
