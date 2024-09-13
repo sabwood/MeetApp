@@ -12,7 +12,7 @@ describe('<NumberOfEvents /> component', () => {
 
   test('render element with role of textbox', () => {
     const input = NumberOfEventsComponent.queryByRole('textbox');
-    expect(input).toBeInTheDocument;
+    expect(input).toBeInTheDocument();
   });
 
   test('ensures the default value of the textbox is 32', () => {
