@@ -1,20 +1,21 @@
 import { useState } from "react";
 
-const NumberOfEvents = ({ setCurrentNOE }) => {
+const NumberOfEvents = ({ setCurrentNOE, setErrorAlert }) => {
   const [number, setNumber] = useState(32);
-  const [newValue, setNewValue] = useState('');
-  const [isChanged, setIsChanged] = useState(false);
 
   const handleInputChange = (e) => {
-    setNewValue(e.target.value);
-    setIsChanged(true);
+    let value = e.target.value;
+    setNumber(value);
 
-    if (e.target.value === '') {
-      setNumber(0)
+    let errorText;
+
+    if (value === isNaN || value.length <= 0) {
+      errorText = 'Please enter a valid number'
     } else {
-      setNumber(e.target.value)
-      setCurrentNOE(e.target.value)
+      errorText = ''
     }
+    setCurrentNOE(value)
+    setErrorAlert(errorText)
   };
 
   return (
@@ -23,7 +24,7 @@ const NumberOfEvents = ({ setCurrentNOE }) => {
       <input
         type="text"
         className="number"
-        value={isChanged ? newValue : number}
+        value={number}
         onChange={handleInputChange}
       />
     </div>

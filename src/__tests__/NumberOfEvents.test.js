@@ -1,4 +1,4 @@
-import { render, waitFor, within } from "@testing-library/react";
+import { render, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { getEvents } from "../api";
 import NumberOfEvents from "../components/NumberOfEvents";
@@ -7,7 +7,7 @@ import App from "../App";
 describe('<NumberOfEvents /> component', () => {
   let NumberOfEventsComponent;
   beforeEach(() => {
-    NumberOfEventsComponent = render(<NumberOfEvents setCurrentNOE={() => { }} />);
+    NumberOfEventsComponent = render(<NumberOfEvents setCurrentNOE={() => { }} setErrorAlert={() => { }} />);
   });
 
   test('render element with role of textbox', () => {
@@ -24,7 +24,7 @@ describe('<NumberOfEvents /> component', () => {
     const user = userEvent.setup();
     await user.type(numberOfEvents, '{backspace}{backspace}10');
     const allEvents = await getEvents();
-    NumberOfEventsComponent.rerender(<NumberOfEvents setCurrentNOE={allEvents} />);
+    NumberOfEventsComponent.rerender(<NumberOfEvents setCurrentNOE={allEvents} setErrorAlert={() => { }} />);
     expect(numberOfEvents).toHaveValue('10');
   });
 });
